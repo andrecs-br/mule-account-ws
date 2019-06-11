@@ -1,0 +1,150 @@
+#%RAML 1.0
+version: v1
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/55fddf1e-bf28-44d1-9eab-d1e928b71c2a/ # 
+title: Accounts API
+mediaType: [ application/json ]
+types:
+  Accounts: !include includes/accounts.raml
+  AccountUpdate: !include includes/accountNoIdCreationDate.raml
+
+/accounts:
+  get:
+    description: Return all accounts registered
+    headers:
+      Requester-ID:
+        required: true
+    queryParameters:
+      type:
+        required: true
+        enum: 
+          - personal
+          - business
+      name:
+        required: false
+      country:
+        required: false
+    responses:
+      200:
+        body:
+          application/json:
+            type: Accounts[]
+            example: !include includes/example-accounts.raml
+      404:
+        body:
+          application/json:
+            example:
+              message: No accounts founded.
+      400:
+        body:
+          application/json:
+            example:
+              message: Error processing request.
+  post:
+    description: Save a new account
+    headers:
+      Requester-ID:
+        required: true
+    body:
+      application/json:
+        type: Accounts[]
+        example: !include includes/example-accounts-noid-creation-date.raml
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              message: Account created (but not really)
+      400:
+        body:
+          application/json:
+            example:
+              message: Error processing request.
+
+  /{ID}:
+    get:
+      description: Retrieve a specific account
+      headers:
+        Requester-ID:
+          required: true
+      queryParameters:
+        type:
+          required: false
+          enum: 
+            - personal
+            - business
+      responses:
+        200:
+          body:
+            application/json:
+              type: Accounts
+              example: !include includes/example-account.raml
+        404:
+          body:
+            application/json:
+              example:
+                message: No account founded.
+        400:
+          body:
+            application/json:
+              example:
+                message: Error processing request.
+
+    put:
+      description: Replace a account
+      headers:
+        Requester-ID:
+          required: true
+      body:
+        application/json:
+          type: AccountUpdate
+          example: !include includes/example-account-noid.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Account replaced (but not really)
+        400:
+          body:
+            application/json:
+              example:
+                message: Error processing request.
+
+    patch:
+      description: Update a account
+      headers:
+        Requester-ID:
+          required: true
+      body:
+        application/json:
+          type: AccountUpdate
+          example: !include includes/example-account-noid.raml
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Account modified (but not really)
+        400:
+          body:
+            application/json:
+              example:
+                message: Error processing request.
+                             
+    delete:
+      description: Delete a account
+      headers:
+        Requester-ID:
+          required: true
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                message: Account deleted (but not really)
+        400:
+          body:
+            application/json:
+              example:
+                message: Error processing request.
+              
